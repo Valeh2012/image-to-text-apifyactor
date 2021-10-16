@@ -5,8 +5,8 @@ import json
 
 # Unfortunately, the env vars are only available on the Apify platform
 # For local runs you will have to comment out the client and mock the values
-#token = os.getenv('API_TOKEN')
-#apify_client = ApifyClient(token)
+token = os.getenv('API_TOKEN')
+apify_client = ApifyClient(token)
 
 # On Apify platform, input is saved in local Key-Value Store as INPUT record
 kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
