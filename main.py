@@ -1,5 +1,5 @@
 ### First get input
-#from apify_client import ApifyClient
+from apify_client import ApifyClient
 import os
 import json
 
@@ -9,13 +9,13 @@ import json
 #apify_client = ApifyClient(token)
 
 # On Apify platform, input is saved in local Key-Value Store as INPUT record
-#kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
+kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
 input = apify_client.key_value_store(kv_store_id).get_record('INPUT')['INPUT']
-
+ 
 """ input = {
-  "image_url": "./image1.png",
+  "image_url": "https://aescripts.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/2/d/2df_simple-text_info_quick-start.png",
   "lang": "en"
-} """
+}  """
 print(input)
 print(input["image_url"])
 print(input["lang"])
