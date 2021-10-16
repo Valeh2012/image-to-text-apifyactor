@@ -10,7 +10,7 @@ apify_client = ApifyClient(token)
 
 # On Apify platform, input is saved in local Key-Value Store as INPUT record
 kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
-input = apify_client.key_value_store(kv_store_id).get_record('INPUT')
+input = json.loads(apify_client.key_value_store(kv_store_id).get_record('INPUT'))
 #input = {'image_url': './image1.png', 'lang':'en'}
 
 # You have the input now, do stuff with it
