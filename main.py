@@ -14,6 +14,8 @@ apify_client = ApifyClient(token)
 kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
 input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"] 
  
+
+print(input) 
 """ input = {
   "input_type": "url",
   "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
@@ -50,6 +52,7 @@ elif input["input_type"] is "base64":
     
 else:
     output = {"error": "Wrong input type", "response":None}
+    apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
 
 
@@ -107,6 +110,7 @@ if input["ocr"] is "paddle":
     
     else:
         output = {"error": "Unsupported output format", "response":None}
+        apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
 
 elif input["ocr"] is "tesseract":
