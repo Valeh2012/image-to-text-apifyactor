@@ -23,13 +23,18 @@ else:
     "input_type": "url",
     "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
     "lang": "en",
-    "ocr": "paddle", # or tesseract
-    "output_format": "bbox" # bbox,txt or pdf
+    "ocr": "tesseract", # or tesseract
+    "output_format": "txt" # bbox,txt or pdf
 }
 
 def download_image(img):
     if img.startswith("http"):
         res = requests.get(img, stream=True)
+        if res.status_code != 200:
+            output = {"error": "Invalid url", "response": None}
+            output = json.dumps(output)
+            if RELEASE:
+                apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
         block_size=1024
         with open("tmp.jpg", "wb") as file:
             for data in res.iter_content(block_size):
@@ -48,10 +53,15 @@ if input["input_type"] == "url":
 
 elif input["input_type"] == "base64":
     b64data = input["input_image"]
-    raw_image = base64.b64decode(b64data)
-    np_arr = np.frombuffer(raw_image, dtype=np.uint8)
-    np_image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-    print(np_image.shape)
+    try:
+        raw_image = base64.b64decode(b64data)
+        np_arr = np.frombuffer(raw_image, dtype=np.uint8)
+        np_image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        print(np_image.shape)
+    except:
+        output = {"error": "Invalid image", "response":None}
+        if RELEASE:
+            apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
     
 else:
     output = {"error": "Wrong input type", "response":None}
