@@ -12,10 +12,9 @@ token = os.getenv('APIFY_TOKEN')
 apify_client = ApifyClient(token)
 
 kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
-input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"] 
+input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"]  
  
 
-print(input) 
 """ input = {
   "input_type": "url",
   "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
@@ -39,7 +38,7 @@ def download_image(img):
         return image
 
 
-if input["input_type"] is "url":
+if input["input_type"] == "url":
     np_image = download_image(input["input_image"])
     print(np_image.shape)
 
@@ -52,11 +51,11 @@ elif input["input_type"] is "base64":
     
 else:
     output = {"error": "Wrong input type", "response":None}
-    apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
+    #apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
 
 
-if input["ocr"] is "paddle":
+if input["ocr"] == "paddle":
 # You have the input now, do stuff with it
     from paddleocr import PaddleOCR
     from pylatex import Document, MiniPage, TextBlock, MediumText, HugeText, \
@@ -110,10 +109,10 @@ if input["ocr"] is "paddle":
     
     else:
         output = {"error": "Unsupported output format", "response":None}
-        apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
+        #apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
 
-elif input["ocr"] is "tesseract":
+elif input["ocr"] == "tesseract":
     import subprocess
 
     cv2.imwrite("./tmp.jpg", np_image)
