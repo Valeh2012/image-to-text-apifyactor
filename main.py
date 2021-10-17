@@ -1,4 +1,3 @@
-from apify_client import ApifyClient
 import os
 import json
 from PIL import Image
@@ -7,6 +6,8 @@ import numpy as np
 import cv2
 import base64
 
+
+from apify_client import ApifyClient
 token = os.getenv('API_TOKEN')
 apify_client = ApifyClient(token)
 
@@ -41,7 +42,7 @@ if input["input_type"] is "url":
     print(np_image.shape)
 
 elif input["input_type"] is "base64":
-    b64data = input["input_image"].decode("utf-8")
+    b64data = input["input_image"]
     raw_image = base64.b64decode(b64data)
     np_arr = np.frombuffer(raw_image, dtype=np.uint8)
     np_image = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
