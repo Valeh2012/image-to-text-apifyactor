@@ -38,5 +38,5 @@ output = json.dumps(output)
 
 datasets = apify_client.datasets().list()
 if len(datasets.items) == 0:
-    apify_client.datasets().get_or_create()push_items(output)
-apify_client.dataset(datasets.items[0])push_items(output)
+    apify_client.datasets().get_or_create().push_items(output)
+apify_client.dataset(datasets.items[0]).push_items(output)
