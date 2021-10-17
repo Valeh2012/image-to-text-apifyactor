@@ -33,7 +33,7 @@
             "title":"Language",
             "type":"string",
             "description":"Text language",
-            "prefill":["en","eng"],
+            "prefill":"en",
             "editor":"textfield",
             "default": "en"
         },
