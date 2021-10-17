@@ -36,9 +36,7 @@ for line in result:
 print(output)
 output = json.dumps(output)
 
-datasets = apify_client.datasets()
-if len(datasets.list().items) == 0:
-    dataset = apify_client.datasets().get_or_create()
-dataset = apify_client.dataset(datasets.list().items[0])
-
-dataset.push_items(output)
+datasets = apify_client.datasets().list()
+if len(datasets.items) == 0:
+    apify_client.datasets().get_or_create()push_items(output)
+apify_client.dataset(datasets.items[0])push_items(output)
