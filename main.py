@@ -8,18 +8,18 @@ import base64
 
 
 from apify_client import ApifyClient
-token = os.getenv('API_TOKEN')
+token = os.getenv('APIFY_TOKEN')
 apify_client = ApifyClient(token)
 
 kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
-input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"]
+input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"] 
  
 """ input = {
   "input_type": "url",
   "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
-  "lang": "eng",
-  "ocr": "tesseract", # or tesseract
-  "output_format": "txt" # bbox,txt or pdf
+  "lang": "en",
+  "ocr": "paddle", # or tesseract
+  "output_format": "bbox" # bbox,txt or pdf
 } """
 
 def download_image(img):
