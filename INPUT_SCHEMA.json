@@ -1,0 +1,50 @@
+{
+    "title": "Image to Text OCR",
+    "description": "Extract machine readable textual data from image documents",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "input_type": {
+            "title": "Input type",
+            "type": "string",
+            "description": "Input image format",
+            "enum": ["base64", "url"],
+            "enumTitles": ["Base64 encoding of image", "Image URL"],
+            "editor":"select",
+            "default": "url"
+        },
+        "input_image": {
+            "title": "Input Image",
+            "type": "string",
+            "description": "Image",
+            "prefill": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
+            "editor":"textfield"
+        },
+        "ocr":{
+            "title": "OCR Model",
+            "type":"string",
+            "description":"Specific OCR model",
+            "enum":["paddle","tesseract"],
+            "enumTitles":["PaddleOCR", "Tesseract "],
+            "editor":"select",
+            "default":"paddle"
+        },
+        "lang": {
+            "title":"Language",
+            "type":"string",
+            "description":"Text language",
+            "prefill":["en","eng"],
+            "editor":"textfield",
+            "default": "en"
+        },
+        "output_format":{
+            "type":"string",
+            "description":"response value format",
+            "enum": ["bbox", "pdf", "txt"],
+            "enumTitles":["Bounding boxes", "PDF file in base64 encoding", "raw string"],
+            "default":"pdf",
+            "editor":"select"
+        }
+    },
+    "required": ["input_image", "input_type", "lang", "ocr","output_format"]
+}

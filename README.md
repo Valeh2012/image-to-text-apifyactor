@@ -4,7 +4,7 @@ The actor takes an input image in a specified format (`base64` or `url`) and usi
 
 ## INPUT
 
-Input of this actor should be JSON file.
+Input of this actor should be JSON file with following fields:
 
 | Field | Type | Description | Allowed values |
 | ----- | ---- | ----------- | -------------- |
