@@ -7,7 +7,7 @@ import cv2
 import base64
 
 
-RELEASE = TRUE
+RELEASE = True
 
 if RELEASE: 
     from apify_client import ApifyClient
