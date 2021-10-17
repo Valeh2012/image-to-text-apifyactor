@@ -4,7 +4,7 @@ The actor takes an input image in a specified format (`base64` or `url`) and usi
 
 ## INPUT
 
-Input of this actor should be JSON containing filter specification. Allowed filters are:
+Input of this actor should be JSON file.
 
 | Field | Type | Description | Allowed values |
 | ----- | ---- | ----------- | -------------- |
@@ -15,6 +15,19 @@ Input of this actor should be JSON containing filter specification. Allowed filt
 | output_format| String | Desired output format | `bbox`/`pdf` for PaddleOCR or `txt`/`pdf` for Tesseract |
 
 
+
+### Sample Input
+```json
+{
+    "input_type": "url",
+    "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
+    "lang": "eng",
+    "ocr": "tesseract", 
+    "output_format": "txt" 
+}
+```
+
+
 ## OUTPUT
 
 Once the actor finishes, it will output a textual data in specified format.
@@ -22,18 +35,7 @@ Once the actor finishes, it will output a textual data in specified format.
  - pdf : Base64 encoded pdf file
  - txt : String text
 
-## Sample Input
-```json
-{
-    "input_type": "url",
-    "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
-    "lang": "eng",
-    "ocr": "tesseract", 
-    "output_format": "bbox" 
-}
-```
-
-## Sample Output
+### Sample Output
 ```json
 {
     "response": "Sample PDF Document\n\nRobert Maron\nGrzegorz. Grudziriski\n\nFebruary 20, 1999\n\x0c", 
