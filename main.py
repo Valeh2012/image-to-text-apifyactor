@@ -7,21 +7,25 @@ import cv2
 import base64
 
 
-from apify_client import ApifyClient
-token = os.getenv('APIFY_TOKEN')
-apify_client = ApifyClient(token)
+RELEASE = TRUE
 
-kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
-input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"]  
+if RELEASE: 
+    from apify_client import ApifyClient
+    token = os.getenv('APIFY_TOKEN')
+    apify_client = ApifyClient(token)
+
+    kv_store_id = os.getenv('APIFY_DEFAULT_KEY_VALUE_STORE_ID')
+    input = apify_client.key_value_store(kv_store_id).get_record('INPUT')["value"]  
+    print(input)
  
-
-""" input = {
-  "input_type": "url",
-  "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
-  "lang": "en",
-  "ocr": "paddle", # or tesseract
-  "output_format": "bbox" # bbox,txt or pdf
-} """
+else:
+    input = {
+    "input_type": "url",
+    "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
+    "lang": "en",
+    "ocr": "paddle", # or tesseract
+    "output_format": "bbox" # bbox,txt or pdf
+}
 
 def download_image(img):
     if img.startswith("http"):
@@ -42,7 +46,7 @@ if input["input_type"] == "url":
     np_image = download_image(input["input_image"])
     print(np_image.shape)
 
-elif input["input_type"] is "base64":
+elif input["input_type"] == "base64":
     b64data = input["input_image"]
     raw_image = base64.b64decode(b64data)
     np_arr = np.frombuffer(raw_image, dtype=np.uint8)
@@ -51,12 +55,12 @@ elif input["input_type"] is "base64":
     
 else:
     output = {"error": "Wrong input type", "response":None}
-    #apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
+    if RELEASE:
+        apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
 
 
 if input["ocr"] == "paddle":
-# You have the input now, do stuff with it
     from paddleocr import PaddleOCR
     from pylatex import Document, MiniPage, TextBlock, MediumText, HugeText, \
     SmallText, VerticalSpace, HorizontalSpace
@@ -67,7 +71,7 @@ if input["ocr"] == "paddle":
 
     result = ocr.ocr(np_image, cls=False)
 
-    if input["output_format"] is "bbox":
+    if input["output_format"] == "bbox":
         output = {}
         i=0
         for line in result:
@@ -77,8 +81,8 @@ if input["ocr"] == "paddle":
 
         output = {"response": output, "error":None}
 
-    elif input["output_format"] is "pdf":
-    #pixel_to_inch = 1/72
+    elif input["output_format"] == "pdf":
+
         img_width = np_image.shape[1] / 72
         img_height = np_image.shape[0] / 72
         print(img_height, img_width)
@@ -104,12 +108,11 @@ if input["ocr"] == "paddle":
         output = {"response": output.decode('utf-8'), "error":None}
         
 
-    elif input["output_format"] is "txt":
+    elif input["output_format"] == "txt":
         output = {"error": "Paddle OCR does not support txt output", "response":None}
     
     else:
         output = {"error": "Unsupported output format", "response":None}
-        #apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
 
 elif input["ocr"] == "tesseract":
@@ -117,14 +120,14 @@ elif input["ocr"] == "tesseract":
 
     cv2.imwrite("./tmp.jpg", np_image)
 
-    if input["output_format"] is "txt":
+    if input["output_format"] == "txt":
         subprocess.run(["tesseract","./tmp.jpg", "output", "-l", "{}".format(input["lang"])])
         output_txt = None
         with open("output.txt", "r") as file:
             output_txt = file.read()
         output = {"response": output_txt, "error":None}
 
-    elif input["output_format"] is "pdf":
+    elif input["output_format"] == "pdf":
         subprocess.run(["tesseract", "./tmp.jpg", "output", "-l", "{}".format(input["lang"]), "pdf"])
         output = None
         with open("output.pdf", "rb") as file:
@@ -132,7 +135,7 @@ elif input["ocr"] == "tesseract":
 
         output = {"response": output.decode('utf-8'), "error":None}
     
-    elif input["output_format"] is "json":
+    elif input["output_format"] == "json":
         output = {"error": "Tesseract OCR does not support bbox output", "response":None}
     
     else:
@@ -145,9 +148,6 @@ else:
 print(output)
 output = json.dumps(output)
 
-apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
+if RELEASE:
+    apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
-datasets = apify_client.datasets().list()
-if len(datasets.items) == 0:
-    apify_client.datasets().get_or_create().push_items(output)
-apify_client.dataset(datasets.items[0]).push_items(output) 
