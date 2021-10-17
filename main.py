@@ -144,7 +144,7 @@ output = json.dumps(output)
 
 apify_client.key_value_store(kv_store_id).set_record('OUTPUT', output, content_type="application/json")
 
-""" datasets = apify_client.datasets().list()
+datasets = apify_client.datasets().list()
 if len(datasets.items) == 0:
     apify_client.datasets().get_or_create().push_items(output)
-apify_client.dataset(datasets.items[0]).push_items(output) """
+apify_client.dataset(datasets.items[0]).push_items(output) 
