@@ -38,6 +38,7 @@
             "default": "en"
         },
         "output_format":{
+            "title":"Output format",
             "type":"string",
             "description":"response value format",
             "enum": ["bbox", "pdf", "txt"],
