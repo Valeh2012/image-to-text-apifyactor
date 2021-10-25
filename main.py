@@ -21,10 +21,10 @@ if RELEASE:
 else:
     input = {
     "input_type": "url",
-    "input_image": "https://images4.programmersought.com/934/e8/e89758ae0ed991f1c8aba947addec9e6.png",
+    "input_image": "https://b.zmtcdn.com/data/menus/238/6104238/3ae657ed3dacf60f28a3bd04bcbcfcc5.jpg",
+    "ocr": "paddle",
     "lang": "en",
-    "ocr": "tesseract", # or tesseract
-    "output_format": "txt" # bbox,txt or pdf
+    "output_format": "pdf"
 }
 
 def download_image(img):
@@ -114,7 +114,8 @@ if input["ocr"] == "paddle":
         output = None
         with open("pdf_export.pdf", "rb") as file:
             output = base64.b64encode(file.read())
-
+        os.unlink("pdf_export.pdf")
+        os.unlink("pdf_export.tex")
         output = {"response": output.decode('utf-8'), "error":None}
         
 
@@ -135,6 +136,7 @@ elif input["ocr"] == "tesseract":
         output_txt = None
         with open("output.txt", "r") as file:
             output_txt = file.read()
+        os.unlink("output.txt")
         output = {"response": output_txt, "error":None}
 
     elif input["output_format"] == "pdf":
@@ -142,7 +144,7 @@ elif input["ocr"] == "tesseract":
         output = None
         with open("output.pdf", "rb") as file:
             output = base64.b64encode(file.read())
-
+        os.unlink("output.pdf")
         output = {"response": output.decode('utf-8'), "error":None}
     
     elif input["output_format"] == "json":
